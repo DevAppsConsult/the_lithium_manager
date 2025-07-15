@@ -1,0 +1,2 @@
+C:/Users/robee/Documents/GitHub/the_lithium_manage_mobiler/the_lithium_manager/android/app/.cxx/Debug/5e324m6t/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/robee/Documents/GitHub/the_lithium_manage_mobiler/the_lithium_manager/android/app/.cxx/Debug/5e324m6t/x86_64/CMakeFiles/rebuild_cache.dir
