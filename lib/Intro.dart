@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
-
 import 'src/pages/dashboard.dart';
 import 'src/pages/notifications.dart';
+import 'package:the_lithium_management/serviceApis/RemoteCalls.dart';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  runApp(IntroPage());
+  runApp(const IntroPage());
 }
 
 class IntroPage extends StatelessWidget {
+  const IntroPage({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner:false,
       home: IntroScreen(),
     );
@@ -18,11 +22,28 @@ class IntroPage extends StatelessWidget {
 }
 
 class IntroScreen extends StatefulWidget {
+  const IntroScreen({super.key});
+
   @override
   State<IntroScreen> createState() => _IntroScreenState();
 }
 
 class _IntroScreenState extends State<IntroScreen> {
+
+  late SharedPreferences prefs;
+  String userName = "";
+  String Emails = "";
+  String Phone = "";
+  String Address = "";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getData();
+
+  }
+
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
@@ -78,6 +99,18 @@ class _IntroScreenState extends State<IntroScreen> {
     );
   }
 
+  Future<void> getData() async {
+    prefs = await SharedPreferences.getInstance();
+    var stringified = prefs.getString("userProfile");
+    Map<String, dynamic> user = jsonDecode(stringified!);
+    setState(() {
+      userName = user['Name'];
+      Emails = user['Email'];
+      Phone = user['Phone'];
+      Address = user['Address'];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,19 +136,18 @@ class _IntroScreenState extends State<IntroScreen> {
                         Container(
                           height: page['imageHeight'],
                           width: double.infinity,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: NetworkImage(page['image']),
-                              fit: BoxFit.cover,
-                            ),
+                          child: Image.asset(
+                            page['image'],
+                            fit: BoxFit.cover,
                           ),
                         ),
-                        const Positioned(
+
+                        Positioned(
                           bottom: 30,
                           left: 100,
                           child: Text(
-                            'Hi, John Doe',
-                            style: TextStyle(
+                            'Hi, $userName',
+                            style: const TextStyle(
                               fontSize: 30,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,

@@ -14,6 +14,7 @@ class Dashboard extends StatelessWidget {
       home: DashboardScreen(),
     );
   }
+
 }
 
 class DashboardScreen extends StatelessWidget {
@@ -50,11 +51,11 @@ class DashboardScreen extends StatelessWidget {
                     color: appBarColor,
                   ),
                   child: FlexibleSpaceBar(
-                    title: Row(
+                    title: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.home, color: Colors.white),
-                        const SizedBox(width: 8),
+                        Icon(Icons.home, color: Colors.white),
+                        SizedBox(width: 8),
                         Text(
                           'Clinical Summary',
                           style: TextStyle(
@@ -111,39 +112,84 @@ class DashboardScreen extends StatelessWidget {
           SliverList(
             delegate: SliverChildListDelegate(
               [
-                // Full-width Cards with Background Images
                 _buildFullWidthCard(
                   title: 'John Doe',
-                  subtitle: 'Your Current Lithium Dose is 11mg, Current Lithium Level is 11mg, Last Drawn 2025.07.16 and your Target Lithium Range 1.0- 1.2',
+                  subtitle:
+                  'Your Current Lithium Dose is 11mg, Current Lithium Level is 11mg, Last Drawn 2025.07.16 and your Target Lithium Range 1.0-1.2',
                   icon: Icons.person,
-                  imageUrl: 'assets/Backgrounds/1.png',
+                  backgroundColor: Colors.deepPurple,
+                  titleStyleBuilder: (context) => TextStyle(
+                    fontSize: MediaQuery.of(context).size.width * 0.05,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                  subtitleStyleBuilder: (context) => TextStyle(
+                    fontSize: MediaQuery.of(context).size.width * 0.035,
+                    color: Colors.white70,
+                  ),
                 ),
                 _buildFullWidthCard(
                   title: 'Lab Results',
-                  subtitle: 'Your Current TSH Level is 0.89, Last Drawn on 2025-07-16, Current GFR is 0.6 Last Drawn on 2025-07-16',
-                  icon: Icons.change_circle,
-                  imageUrl: 'assets/Backgrounds/2.png',
+                  subtitle:
+                  'Your Current TSH Level is 0.89, Last Drawn on 2025-07-16, Current GFR is 0.6 Last Drawn on 2025-07-16',
+                  icon: Icons.health_and_safety,
+                  backgroundColor: Colors.deepPurple,
+                  titleStyleBuilder: (context) => TextStyle(
+                    fontSize: MediaQuery.of(context).size.width * 0.05,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                  subtitleStyleBuilder: (context) => TextStyle(
+                    fontSize: MediaQuery.of(context).size.width * 0.035,
+                    color: Colors.white70,
+                  ),
                 ),
                 _buildFullWidthCard(
                   title: 'Diagnosis',
                   subtitle: 'Treatment Resistant Depression.',
-                  icon: Icons.change_circle,
-                  imageUrl: 'assets/Backgrounds/1.png',
+                  icon: Icons.report,
+                  backgroundColor: Colors.deepPurple,
+                  titleStyleBuilder: (context) => TextStyle(
+                    fontSize: MediaQuery.of(context).size.width * 0.05,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                  subtitleStyleBuilder: (context) => TextStyle(
+                    fontSize: MediaQuery.of(context).size.width * 0.035,
+                    color: Colors.white70,
+                  ),
                 ),
                 _buildFullWidthCard(
                   title: 'Allergies',
                   subtitle: 'test',
-                  icon: Icons.change_circle,
-                  imageUrl: 'assets/Backgrounds/2.png',
+                  icon: Icons.sick,
+                  backgroundColor: Colors.deepPurple,
+                  titleStyleBuilder: (context) => TextStyle(
+                    fontSize: MediaQuery.of(context).size.width * 0.05,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                  subtitleStyleBuilder: (context) => TextStyle(
+                    fontSize: MediaQuery.of(context).size.width * 0.035,
+                    color: Colors.white70,
+                  ),
                 ),
                 _buildFullWidthCard(
                   title: 'Potential Drug Interactions',
                   subtitle: 'ACE-I/ ARB,SSRI’s,Antipsychotics',
-                  icon: Icons.change_circle,
-                  imageUrl: 'assets/Backgrounds/1.png',
+                  icon: Icons.accessibility,
+                  backgroundColor: Colors.deepPurple,
+                  titleStyleBuilder: (context) => TextStyle(
+                    fontSize: MediaQuery.of(context).size.width * 0.05,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                  subtitleStyleBuilder: (context) => TextStyle(
+                    fontSize: MediaQuery.of(context).size.width * 0.035,
+                    color: Colors.white70,
+                  ),
                 ),
-
-                // Grid Section
+                // Grid section remains unchanged
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: GridView.count(
@@ -157,13 +203,17 @@ class DashboardScreen extends StatelessWidget {
                         title: 'Next Lab Work Date',
                         subtitle: '2024-12-25',
                         icon: Icons.healing,
-                        imageUrl: 'assets/Backgrounds/3.png',
+                        backgroundColor: Colors.indigo,
+                        titleColor: Colors.white,
+                        subtitleColor: Colors.white70,
                       ),
                       _buildGridCard(
                         title: 'Next Appointment',
                         subtitle: '2025-01-10',
                         icon: Icons.calendar_today,
-                        imageUrl: 'assets/Backgrounds/5.jpg',
+                        backgroundColor: Colors.indigo,
+                        titleColor: Colors.white,
+                        subtitleColor: Colors.white70,
                       ),
                     ],
                   ),
@@ -173,112 +223,119 @@ class DashboardScreen extends StatelessWidget {
                   title: 'Dr. Jane Smith',
                   subtitle: 'Keep monitoring side effects closely.',
                   icon: Icons.comment,
-                  imageUrl: 'assets/Backgrounds/4.jpg',
+                  backgroundColor: Colors.deepPurple,
+                  titleStyleBuilder: (context) => TextStyle(
+                    fontSize: MediaQuery.of(context).size.width * 0.05,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                  subtitleStyleBuilder: (context) => TextStyle(
+                    fontSize: MediaQuery.of(context).size.width * 0.035,
+                    color: Colors.white70,
+                  ),
                 ),
               ],
             ),
-          ),
+          )
+          ,
         ],
       ),
     );
   }
 
-  // Full-Width Card Widget with Background Image
   Widget _buildFullWidthCard({
     required String title,
     required String subtitle,
     required IconData icon,
-    required String imageUrl,
+    Color backgroundColor = Colors.blue,
+    TextStyle Function(BuildContext)? titleStyleBuilder,
+    TextStyle Function(BuildContext)? subtitleStyleBuilder,
   }) {
-    return Card(
-      elevation: 3,
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Container(
-        height: 120,
+        height: 160,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          image: DecorationImage(
-            image: NetworkImage(imageUrl),
-            fit: BoxFit.cover,
-          ),
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(12.0), // Slight rounding for visual polish
         ),
-        child: Stack(
-          children: [
-            // Gradient Overlay
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                gradient: const LinearGradient(
-                  colors: [Colors.black54, Colors.transparent],
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            children: [
+              Icon(icon, color: Colors.white, size: 36),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Builder(
+                  builder: (context) {
+                    final titleStyle = titleStyleBuilder?.call(context) ??
+                        const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        );
+                    final subtitleStyle = subtitleStyleBuilder?.call(context) ??
+                        const TextStyle(
+                          fontSize: 14,
+                          color: Colors.white70,
+                        );
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          title,
+                          style: titleStyle,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          subtitle,
+                          style: subtitleStyle,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
-            ),
-            ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Colors.white60,
-                child: Icon(icon, color: Colors.white),
-              ),
-              title: Text(
-                title,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  color: Colors.white,
-                ),
-              ),
-              subtitle: Text(
-                subtitle,
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.white70,
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
-  // Grid Card Widget with Background Image
+
   Widget _buildGridCard({
     required String title,
     required String subtitle,
     required IconData icon,
-    required String imageUrl,
+    Color backgroundColor = Colors.blue,
+    Color titleColor = Colors.white,
+    Color subtitleColor = Colors.white70,
   }) {
-    return Card(
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          image: DecorationImage(
-            image: NetworkImage(imageUrl),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Stack(
-          children: [
-            // Gradient Overlay
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                gradient: const LinearGradient(
-                  colors: [Colors.black54, Colors.transparent],
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                ),
-              ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        double width = MediaQuery.of(context).size.width;
+        double titleFontSize = width * 0.035;
+        double subtitleFontSize = width * 0.03;
+
+        return Card(
+          elevation: 3,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+          child: Container(
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              borderRadius: BorderRadius.circular(0),
             ),
-            Padding(
+            child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-
                 children: [
                   CircleAvatar(
                     backgroundColor: Colors.white70,
@@ -287,38 +344,39 @@ class DashboardScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Container(
-                    width: double.infinity, // Ensure the container takes full width
-                    padding: EdgeInsets.all(16.0),
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(16.0),
                     child: Text(
                       title,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                        color: Colors.white,
+                        fontSize: titleFontSize,
+                        color: titleColor,
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 4),
                   Text(
                     subtitle,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Colors.white70,
+                    style: TextStyle(
+                      fontSize: subtitleFontSize,
+                      color: subtitleColor,
                     ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
-}
 
+
+
+}
 // Show PopupMenu with options
 void _showOptionsMenu(BuildContext context) {
   showMenu(

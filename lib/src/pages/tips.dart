@@ -1,9 +1,22 @@
 import 'package:flutter/material.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'contact.dart';
+import 'package:the_lithium_management/screens/onboding/onboding_screen.dart';
 
 void main() {
   runApp(Tips());
+}
+
+void logout(BuildContext context) async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.clear(); // Clear all saved data
+
+  // Navigate to sign-in and remove all previous routes
+  Navigator.pushAndRemoveUntil(
+    context,
+    MaterialPageRoute(builder: (context) => const OnboardingScreen()),
+        (Route<dynamic> route) => false,
+  );
 }
 
 class Tips extends StatelessWidget {
@@ -162,6 +175,8 @@ class AccordionCard extends StatelessWidget {
     required this.icon,
   });
 
+
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -172,7 +187,7 @@ class AccordionCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         ),
         child: ExpansionTile(
-          leading: Image.network(
+          leading: Image.asset(
             icon,
             width: 40,
             height: 40,
@@ -251,7 +266,7 @@ void _showOptionsMenu(BuildContext context) {
           // Show help or contact support
           break;
         case 'logout':
-          print('Logout clicked');
+          logout(context);
           // Handle logout functionality
           break;
 

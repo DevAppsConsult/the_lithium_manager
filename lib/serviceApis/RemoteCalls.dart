@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 
 class RemoteCalls{
   Future<Login?> getLogin(String email,String password) async{
-    var api = Uri.parse("http://192.168.3.8:5000/api/Login?Email=${email}&Password=${password}");
+    var api = Uri.parse("http://44.223.87.21:4356/api/Login?Email=${email}&Password=${password}");
     var response  = await http.get(api);
     if(response.statusCode == 200){
        var json = response.body;
@@ -19,7 +19,7 @@ class RemoteCalls{
 
   Future<NotificationsModel?> getNotifications(String Email) async{
     //http://localhost:5000/api/Notifications?Email=nivanpee%40gmail.com
-    var api = Uri.parse("http://192.168.3.8:5000/api/Notifications?Email=${Email}");
+    var api = Uri.parse("http://44.223.87.21:4356/api/Notifications?Email=${Email}");
     var response  = await http.get(api);
     if(response.statusCode == 200){
        var json = response.body;
@@ -28,7 +28,7 @@ class RemoteCalls{
   }
 
   Future<PatientProtocol?> getProtocols(String pID) async{
-    var api = Uri.parse("http://192.168.3.8:5000/api/PatientProtocol?PatientID=${pID}");
+    var api = Uri.parse("http://44.223.87.21:4356/api/PatientProtocol?PatientID=${pID}");
     var response  = await http.get(api);
     if(response.statusCode == 200){
        var json = response.body;
@@ -37,7 +37,7 @@ class RemoteCalls{
   }
 
   Future<EditPatient?> editPatient(dynamic payLoad) async{
-    var api = Uri.parse("http://192.168.3.8:5000/api/editPatients?pData=${payLoad.Data}");
+    var api = Uri.parse("http://44.223.87.21:4356/api/editPatients?pData=${payLoad.Data}");
     var response  = await http.get(api);
     if(response.statusCode == 200){
        var json = response.body;
