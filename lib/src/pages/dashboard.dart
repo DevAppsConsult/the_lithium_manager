@@ -1,55 +1,33 @@
 import 'package:flutter/material.dart';
-
 import 'contact.dart';
-
-void main() {
-  runApp(Dashboard());
-}
+import 'package:the_lithium_management/screens/onboding/onboding_screen.dart';
 
 class Dashboard extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: DashboardScreen(),
-    );
-  }
+  const Dashboard({super.key});
 
-}
-
-class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          // SliverAppBar with large style
           SliverAppBar.large(
             expandedHeight: 300,
             stretch: true,
-            pinned: true, // Keeps the AppBar pinned when scrolling
-            backgroundColor: const Color.fromARGB(
-                255, 73,69,180), // Collapsed background color
-            foregroundColor: Colors.white, // Collapsed icon and text color
+            pinned: true,
+            backgroundColor: const Color.fromARGB(255, 73, 69, 180),
+            foregroundColor: Colors.white,
             flexibleSpace: LayoutBuilder(
               builder: (context, constraints) {
-                // Calculate how much the app bar is collapsed
-                double collapseRatio = (constraints.maxHeight - kToolbarHeight) /
-                    (300 - kToolbarHeight);
+                double collapseRatio = (constraints.maxHeight - kToolbarHeight) / (300 - kToolbarHeight);
                 collapseRatio = collapseRatio.clamp(0.0, 1.0);
-
-                // Interpolated background color
                 Color appBarColor = Color.lerp(
-                  const Color.fromARGB(
-                      255, 73,69,180), // Collapsed color
-                  Colors.transparent, // Expanded color
+                  const Color.fromARGB(255, 73, 69, 180),
+                  Colors.transparent,
                   collapseRatio,
                 )!;
 
                 return Container(
-                  decoration: BoxDecoration(
-                    color: appBarColor,
-                  ),
+                  decoration: BoxDecoration(color: appBarColor),
                   child: FlexibleSpaceBar(
                     title: const Row(
                       mainAxisSize: MainAxisSize.min,
@@ -78,13 +56,12 @@ class DashboardScreen extends StatelessWidget {
                           'assets/avaters/banner.png',
                           fit: BoxFit.cover,
                         ),
-                        // Add a gradient for better text readability
-                        Positioned.fill(
+                        const Positioned.fill(
                           child: DecoratedBox(
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: [
-                                  Colors.black.withOpacity(0.5),
+                                  Colors.black54,
                                   Colors.transparent,
                                 ],
                                 begin: Alignment.bottomCenter,
@@ -107,8 +84,7 @@ class DashboardScreen extends StatelessWidget {
             ],
           ),
 
-
-          // Content starts here
+          // Dashboard content here...
           SliverList(
             delegate: SliverChildListDelegate(
               [
@@ -236,8 +212,7 @@ class DashboardScreen extends StatelessWidget {
                 ),
               ],
             ),
-          )
-          ,
+          ),
         ],
       ),
     );
@@ -374,68 +349,63 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-
-
-}
-// Show PopupMenu with options
-void _showOptionsMenu(BuildContext context) {
-  showMenu(
-    context: context,
-    position: const RelativeRect.fromLTRB(100.0, 100.0, 0.0, 0.0),
-    items: [
-      const PopupMenuItem(
-        value: 'settings',
-        child: Row(
-          children: [
-            Icon(Icons.settings, color: Colors.blue),
-            SizedBox(width: 10),
-            Text('Settings'),
-          ],
+  void _showOptionsMenu(BuildContext context) {
+    showMenu(
+      context: context,
+      position: const RelativeRect.fromLTRB(100.0, 100.0, 0.0, 0.0),
+      items: [
+        const PopupMenuItem(
+          value: 'settings',
+          child: Row(
+            children: [
+              Icon(Icons.settings, color: Colors.blue),
+              SizedBox(width: 10),
+              Text('Settings'),
+            ],
+          ),
         ),
-      ),
-      const PopupMenuItem(
-        value: 'contact',
-        child: Row(
-          children: [
-            Icon(Icons.message, color: Colors.red),
-            SizedBox(width: 10),
-            Text('Contact'),
-          ],
+        const PopupMenuItem(
+          value: 'contact',
+          child: Row(
+            children: [
+              Icon(Icons.message, color: Colors.red),
+              SizedBox(width: 10),
+              Text('Contact'),
+            ],
+          ),
         ),
-      ),
-      const PopupMenuItem(
-        value: 'logout',
-        child: Row(
-          children: [
-            Icon(Icons.exit_to_app, color: Colors.green),
-            SizedBox(width: 10),
-            Text('Logout'),
-          ],
+        const PopupMenuItem(
+          value: 'logout',
+          child: Row(
+            children: [
+              Icon(Icons.exit_to_app, color: Colors.green),
+              SizedBox(width: 10),
+              Text('Logout'),
+            ],
+          ),
         ),
-      ),
-    ],
-    elevation: 8.0,
-  ).then((value) {
-    // Handle the selected option
-    if (value != null) {
-      switch (value) {
-        case 'settings':
-          print('Settings clicked');
-          // Navigate to settings page
-          break;
-        case 'contact':
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => Contact()),
-          );
-          // Show help or contact support
-          break;
-        case 'logout':
-          print('Logout clicked');
-          // Handle logout functionality
-          break;
-
+      ],
+      elevation: 8.0,
+    ).then((value) {
+      if (value != null) {
+        switch (value) {
+          case 'settings':
+            break;
+          case 'contact':
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Contact()),
+            );
+            break;
+          case 'logout':
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const OnboardingScreen()),
+                  (route) => false,
+            );
+            break;
+        }
       }
-    }
-  });
+    });
+  }
 }
