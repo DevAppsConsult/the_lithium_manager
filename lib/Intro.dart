@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'src/pages/dashboard.dart';
 import 'src/pages/notifications.dart';
+import 'src/pages/MainDashboard.dart';
 import 'package:the_lithium_management/serviceApis/RemoteCalls.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -95,7 +96,7 @@ class _IntroScreenState extends State<IntroScreen> {
     // Replace this with actual dashboard navigation
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => NotificationApp()),
+      MaterialPageRoute(builder: (context) => DashboardMain()),
     );
   }
 
