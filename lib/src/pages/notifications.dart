@@ -1,15 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:the_lithium_management/models/NotificationsModel.dart';
+import 'package:the_lithium_management/serviceApis/RemoteCalls.dart';
 import 'package:the_lithium_management/src/pages/dashboard.dart';
 import 'package:the_lithium_management/src/pages/tips.dart';
 import 'package:the_lithium_management/src/pages/profile.dart';
 import 'package:the_lithium_management/src/pages/contact.dart';
 import 'package:the_lithium_management/screens/onboding/onboding_screen.dart';
 
-class Notifications extends StatelessWidget {
-  final List<String> notifications = List.generate(
-    20,
-        (index) => 'Notification ${index + 1}',
-  );
+void main() {
+  runApp(Noftify());
+}
+
+class Noftify extends StatefulWidget {
+  @override
+  State<Noftify> createState() => Notifications();
+}
+
+class Notifications extends State<Noftify>  {
+
+   List<dynamic> notifications = [];
+
+   @override
+   void initState() {
+     // TODO: implement initState
+     super.initState();
+     getUserNotifications("9");
+
+   }
+
+  Future<void> getUserNotifications(patientID) async {
+    var reqData = await RemoteCalls().getNotifications(patientID) as NotificationsModel;
+    setState(() {
+      notifications  = reqData.data;
+      print(notifications[0].notificationDate);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,11 +135,11 @@ class Notifications extends StatelessWidget {
                         child: Icon(Icons.notifications, color: Colors.white),
                       ),
                       title: Text(
-                        notifications[index],
+                       '${ notifications[index].notificationDate}',
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       subtitle: Text(
-                        'This is the detail of notification #${index + 1}',
+                        '${notifications[index].notificationDetails}',
                       ),
                       trailing: const Icon(Icons.chevron_right),
                     ),

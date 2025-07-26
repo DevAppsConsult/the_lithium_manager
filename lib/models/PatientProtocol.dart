@@ -30,37 +30,57 @@ class PatientProtocol {
 
 class Data {
     int id;
-    String patientId;
-    String patientName;
-    String patientMail;
-    String mostRecentLabWork;
-    String labWorkDone;
-    String startingLithiumDose;
-    String dateStarted;
-    String dosing;
-    String targetLithiumRange;
-    String frequencyBloodDraws;
-    String changeMedication;
-    String nextLabWorkDate;
-    String nextFollowUpApointment;
-    String providerComments;
+    dynamic patientId;
+    dynamic patientName;
+    dynamic patientMail;
+    dynamic lithiumDrug;
+    dynamic lithiumDose;
+    dynamic dosingFreq;
+    dynamic lithiumLevel;
+    dynamic lithiumLevelDate;
+    dynamic gfrLevel;
+    dynamic gfrDate;
+    dynamic tshLevel;
+    dynamic tshDate;
+    dynamic tshTargetRange;
+    dynamic nextFollowUpApointment;
+    dynamic providerName;
+    dynamic providerComments;
+    dynamic targetLithiumRange;
+    dynamic frequencyBloodDraws;
+    dynamic frequencyBloodDrawsTsh;
+    dynamic frequencyBloodDrawsGfr;
+    dynamic patientDiagnosis;
+    dynamic allergies;
+    dynamic potentialDrugIndication;
+    dynamic selectedItems;
 
     Data({
         required this.id,
-        required this.patientId,
-        required this.patientName,
-        required this.patientMail,
-        required this.mostRecentLabWork,
-        required this.labWorkDone,
-        required this.startingLithiumDose,
-        required this.dateStarted,
-        required this.dosing,
-        required this.targetLithiumRange,
-        required this.frequencyBloodDraws,
-        required this.changeMedication,
-        required this.nextLabWorkDate,
-        required this.nextFollowUpApointment,
-        required this.providerComments,
+        this.patientId,
+        this.patientName,
+        this.patientMail,
+        this.lithiumDrug,
+        this.lithiumDose,
+        this.dosingFreq,
+        this.lithiumLevel,
+        this.lithiumLevelDate,
+        this.gfrLevel,
+        this.gfrDate,
+        this.tshLevel,
+        this.tshDate,
+        this.tshTargetRange,
+        this.nextFollowUpApointment,
+        this.providerName,
+        this.providerComments,
+        this.targetLithiumRange,
+        this.frequencyBloodDraws,
+        this.frequencyBloodDrawsTsh,
+        this.frequencyBloodDrawsGfr,
+        this.patientDiagnosis,
+        this.allergies,
+        this.potentialDrugIndication,
+        this.selectedItems,
     });
 
     factory Data.fromJson(Map<String, dynamic> json) => Data(
@@ -68,34 +88,54 @@ class Data {
         patientId: json["patientID"],
         patientName: json["patientName"],
         patientMail: json["patientMail"],
-        mostRecentLabWork: json["mostRecentLabWork"],
-        labWorkDone: json["labWorkDone"],
-        startingLithiumDose: json["startingLithiumDose"],
-        dateStarted: json["dateStarted"],
-        dosing: json["dosing"],
+        lithiumDrug: json["lithiumDrug"],
+        lithiumDose: json["lithiumDose"],
+        dosingFreq: json["dosingFreq"],
+        lithiumLevel: json["lithiumLevel"],
+        lithiumLevelDate: json["lithiumLevelDate"],
         targetLithiumRange: json["targetLithiumRange"],
         frequencyBloodDraws: json["frequencyBloodDraws"],
-        changeMedication: json["changeMedication"],
-        nextLabWorkDate: json["nextLabWorkDate"],
-        nextFollowUpApointment:json["nextFollowUpApointment"],
+        gfrLevel: json["gfrLevel"],
+        tshLevel: json["tshLevel"],
+        tshDate:json["tshDate"],
+        tshTargetRange:json["tshTargetRange"],
         providerComments: json["providerComments"],
+        nextFollowUpApointment:json["nextFollowUpApointment"],
+        providerName:json["providerName"],
+        frequencyBloodDrawsTsh:json["frequencyBloodDrawsTsh"],
+        frequencyBloodDrawsGfr:json['frequencyBloodDrawsGfr'],
+        patientDiagnosis:json['patientDiagnosis'],
+        allergies:json['allergies'],
+        potentialDrugIndication:json['potential_Drug_Indication'],
+        selectedItems:json['selectedItems'],
+        gfrDate: json['gfrDate']
     );
 
     Map<String, dynamic> toJson() => {
-        "id": id,
-        "patientID": patientId,
+        "id": id.toString(),
+        "patientId": patientId,
         "patientName": patientName,
         "patientMail": patientMail,
-        "mostRecentLabWork": mostRecentLabWork,
-        "labWorkDone": labWorkDone,
-        "startingLithiumDose": startingLithiumDose,
-        "dateStarted": dateStarted,
-        "dosing": dosing,
+        "lithiumDrug": lithiumDrug,
+        "lithiumDose": lithiumDose,
+        "dosingFreq": dosingFreq,
+        "lithiumLevel": lithiumLevel,
+        "lithiumLevelDate": lithiumLevelDate,
         "targetLithiumRange": targetLithiumRange,
         "frequencyBloodDraws": frequencyBloodDraws,
-        "changeMedication": changeMedication,
-        "nextLabWorkDate": nextLabWorkDate,
-        "nextFollowUpApointment": nextFollowUpApointment,
+        "gfrLevel": gfrLevel,
+        "tshLevel": tshLevel,
+        "tshDate":tshDate,
+        "tshTargetRange":tshTargetRange,
         "providerComments": providerComments,
+        "nextFollowUpApointment":nextFollowUpApointment,
+        "providerName":providerName,
+        "frequencyBloodDrawsTsh":frequencyBloodDrawsTsh,
+        "frequencyBloodDrawsGfr":frequencyBloodDrawsGfr,
+        "patientDiagnosis":patientDiagnosis,
+        "allergies":allergies,
+        "potentialDrugIndication":potentialDrugIndication,
+        "selectedItems":selectedItems,
+        "gfrDate":gfrDate
     };
 }

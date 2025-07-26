@@ -1,12 +1,11 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:the_lithium_management/models/EditPatient.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:the_lithium_management/serviceApis/RemoteCalls.dart';
 import 'contact.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 void main() {
-  runApp(MyProfile());
+  runApp(MaterialApp(home: MyProfile()));
 }
 
 class MyProfile extends StatefulWidget {
@@ -14,63 +13,56 @@ class MyProfile extends StatefulWidget {
   State<MyProfile> createState() => ProfileScreen();
 }
 
-
 class ProfileScreen extends State<MyProfile> {
-late SharedPreferences prefs;
-String userName = "";
-String Emails = "";
-String Phone = "";
-String Address = "";
+  late SharedPreferences prefs;
+  String userName = "";
+  String Emails = "";
+  String Phone = "";
+  String Address = "";
+  String PatientID = "";
 
- @override
+  @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getData();
-    
   }
 
-Future<void> getData() async {
-  prefs = await SharedPreferences.getInstance();
-  var stringified = prefs.getString("userProfile");
-  Map<String, dynamic> user = jsonDecode(stringified!);
-  setState(() {
-    userName = user['Name'];
-    Emails = user['Email'];
-    Phone = user['Phone'];
-    Address = user['Address'];
-  });
-}
+  Future<void> getData() async {
+    prefs = await SharedPreferences.getInstance();
+    var stringified = prefs.getString("userProfile");
+    Map<String, dynamic> user = jsonDecode(stringified!);
+    setState(() {
+      userName = user['Name'];
+      Emails = user['Email'];
+      Phone = user['Phone'];
+      Address = user['Address'];
+      PatientID = user['PatientID'];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          // SliverAppBar with large style
           SliverAppBar.large(
             expandedHeight: 300,
             stretch: true,
-            pinned: true, // Keeps the AppBar pinned when scrolling
+            pinned: true,
             backgroundColor: const Color.fromARGB(255, 73, 69, 180),
             foregroundColor: Colors.white,
             flexibleSpace: LayoutBuilder(
               builder: (context, constraints) {
                 double collapseRatio =
-                    (constraints.maxHeight - kToolbarHeight) /
-                        (300 - kToolbarHeight);
+                    (constraints.maxHeight - kToolbarHeight) / (300 - kToolbarHeight);
                 collapseRatio = collapseRatio.clamp(0.0, 1.0);
-
                 Color appBarColor = Color.lerp(
                   const Color.fromARGB(255, 73, 69, 180),
                   Colors.transparent,
                   collapseRatio,
                 )!;
-
                 return Container(
-                  decoration: BoxDecoration(
-                    color: appBarColor,
-                  ),
+                  decoration: BoxDecoration(color: appBarColor),
                   child: FlexibleSpaceBar(
                     title: const Row(
                       mainAxisSize: MainAxisSize.min,
@@ -126,18 +118,52 @@ Future<void> getData() async {
               ),
             ],
           ),
-
-          // Profile details inside Cards
           SliverList(
             delegate: SliverChildListDelegate(
               [
-                ProfileCard(title: 'Full Name', value: userName),
-                ProfileCard(title: 'Email', value: Emails),
-                ProfileCard(title: 'Phone', value: Phone),
                 ProfileCard(
-                    title: 'Address',
-                    value: Address),
-                ProfileCard(title: 'Password', value: '********'),
+                  title: 'Full Name',
+                  value: userName,
+                  onValueUpdated: (title, newValue) {
+                    setState(() {
+                      userName = newValue;
+                    });
+                  },
+                ),
+                ProfileCard(
+                  title: 'Email',
+                  value: Emails,
+                  onValueUpdated: (title, newValue) {
+                    setState(() {
+                      Emails = newValue;
+                    });
+                  },
+                ),
+                ProfileCard(
+                  title: 'Phone',
+                  value: Phone,
+                  onValueUpdated: (title, newValue) {
+                    setState(() {
+                      Phone = newValue;
+                    });
+                  },
+                ),
+                ProfileCard(
+                  title: 'Address',
+                  value: Address,
+                  onValueUpdated: (title, newValue) {
+                    setState(() {
+                      Address = newValue;
+                    });
+                  },
+                ),
+                ProfileCard(
+                  title: 'Password',
+                  value: '********',
+                  onValueUpdated: (title, newValue) {
+                    // Optional: handle if needed
+                  },
+                ),
               ],
             ),
           ),
@@ -147,11 +173,17 @@ Future<void> getData() async {
   }
 }
 
+// ProfileCard with callback
 class ProfileCard extends StatelessWidget {
   final String title;
   final String value;
+  final Function(String title, String newValue) onValueUpdated;
 
-  ProfileCard({required this.title, required this.value});
+  ProfileCard({
+    required this.title,
+    required this.value,
+    required this.onValueUpdated,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -168,7 +200,7 @@ class ProfileCard extends StatelessWidget {
         trailing: IconButton(
           icon: const Icon(Icons.edit, color: Colors.blue),
           onPressed: () {
-            _showEditDialog(context, title, value);
+            _showEditDialog(context, title, value, onValueUpdated);
           },
         ),
       ),
@@ -176,10 +208,10 @@ class ProfileCard extends StatelessWidget {
   }
 }
 
-// Show Edit Dialog
-void _showEditDialog(BuildContext context, String title, String currentValue) {
-  final TextEditingController controller =
-  TextEditingController(text: currentValue);
+// Edit dialog with update
+void _showEditDialog(BuildContext context, String title, String currentValue,
+    Function(String, String) onValueUpdated) {
+  final TextEditingController controller = TextEditingController(text: currentValue);
 
   showDialog(
     context: context,
@@ -195,16 +227,16 @@ void _showEditDialog(BuildContext context, String title, String currentValue) {
         ),
         actions: [
           TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(); // Close dialog without saving
-            },
+            onPressed: () => Navigator.of(context).pop(),
             child: const Text('Cancel'),
           ),
           ElevatedButton(
-            onPressed: () {
-              // Perform save action here
-              print('$title updated to: ${controller.text}');
-              _updateProfile(context,controller.text,title);
+            onPressed: () async {
+              final newValue = controller.text;
+              final success = await _updateProfile(context, newValue, title);
+              if (success) {
+                onValueUpdated(title, newValue);
+              }
             },
             child: const Text('Save'),
           ),
@@ -214,24 +246,32 @@ void _showEditDialog(BuildContext context, String title, String currentValue) {
   );
 }
 
-Future<void> _updateProfile(BuildContext context,String val,String titles) async {
-  Navigator.of(context).pop(); // Close dialog after saving
+// Save profile via API
+Future<bool> _updateProfile(BuildContext context, String val, String title) async {
   var prefs = await SharedPreferences.getInstance();
   var stringified = prefs.getString("userProfile");
   Map<String, dynamic> user = jsonDecode(stringified!);
-   Map<String, dynamic> userProfiled = {
-      "Name":titles=="Full Name"?val:user['Name'],
-      "Email":titles=="Email"?val:user['Email'],
-      "Phone":titles=="Phone"?val:user['Phone'],
-      "Address":titles=="Address"?val:user['Address'],
-      "Password":titles=="Password"?val:user['Password'],
-     };
-     // make API submission 
-   var data = await RemoteCalls().editPatient(userProfiled) as EditPatient;
-   print('data to: ${data.operationState}');
+
+  Map<String, dynamic> userProfiled = {
+    "Name": title == "Full Name" ? val : user['Name'],
+    "Email": title == "Email" ? val : user['Email'],
+    "Phone": title == "Phone" ? val : user['Phone'],
+    "Address": title == "Address" ? val : user['Address'],
+    "Password": title == "Password" ? val : user['Password'] ?? "--",
+    "PatientID": user['PatientID']
+  };
+
+  var data = await RemoteCalls().editPatient(title, val, user['PatientID']);
+  if (data?.data == "Password reset completed" ||
+      data?.data == "Profile info update completed") {
+    await prefs.setString("userProfile", jsonEncode(userProfiled));
+    Navigator.of(context).pop(); // Close dialog
+    return true;
+  }
+  return false;
 }
 
-// Show PopupMenu with options
+// Options menu
 void _showOptionsMenu(BuildContext context) {
   showMenu(
     context: context,

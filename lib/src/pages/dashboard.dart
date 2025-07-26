@@ -1,10 +1,74 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:the_lithium_management/models/AppointmentsModel.dart';
+import 'package:the_lithium_management/models/PatientProtocol.dart';
+import '../../serviceApis/RemoteCalls.dart';
 import 'contact.dart';
 import 'package:the_lithium_management/screens/onboding/onboding_screen.dart';
 
-class Dashboard extends StatelessWidget {
-  const Dashboard({super.key});
+void main() {
+  runApp(MainDash());
+}
 
+class MainDash extends StatefulWidget {
+  @override
+  State<MainDash> createState() => Dashboard();
+}
+
+class Dashboard extends State<MainDash> {
+  String pName = "--";
+  String litDose = "--";
+  String litLvl = "--";
+  String lastDrawn = "--";
+  String targetLit = "--";
+  String litRange = "--";
+  String tshLvl = "--";
+  String tshLastDrawn = "--";
+  String gfrLvl = "--";
+  String gfrDate = "--";
+  String diagnosis = "--";
+  String allergy = "--";
+  String potentialDrugsIndication = "--";
+  String providerComments = '--';
+  String providerNamed = "--";
+  List<dynamic> appointsDate = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fetchProtocol("9");
+    userAppointments("9");
+  }
+
+  Future<void> fetchProtocol(patientID) async {
+    var reqData = await RemoteCalls().getProtocols(patientID) as PatientProtocol;
+
+
+    setState(() {
+      pName = reqData.data.patientName;
+      litDose = reqData.data.lithiumDose;
+      litLvl = reqData.data.lithiumLevel;
+      lastDrawn = reqData.data.lithiumLevelDate;
+      litRange = reqData.data.targetLithiumRange;
+      tshLvl = reqData.data.tshLevel;
+      tshLastDrawn = reqData.data.tshDate;
+      gfrLvl = reqData.data.gfrLevel;
+      gfrDate = reqData.data.gfrDate;
+      diagnosis = reqData.data.patientDiagnosis;
+      allergy = reqData.data.allergies ?? '--';
+      potentialDrugsIndication =reqData.data.potentialDrugIndication !=null? jsonDecode(reqData.data.potentialDrugIndication).join(', '):'--';
+      providerComments = reqData.data.providerComments??"--";
+      providerNamed = reqData.data.providerName??"--";
+    });
+  }
+Future<void> userAppointments(patientID) async{
+  var appointmentData = await RemoteCalls().getPatientAppointments(patientID) as Appointments;
+  setState(() {
+    appointsDate = appointmentData.data; 
+  });
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,9 +153,9 @@ class Dashboard extends StatelessWidget {
             delegate: SliverChildListDelegate(
               [
                 _buildFullWidthCard(
-                  title: 'John Doe',
+                  title: pName??"--",
                   subtitle:
-                  'Your Current Lithium Dose is 11mg, Current Lithium Level is 11mg, Last Drawn 2025.07.16 and your Target Lithium Range 1.0-1.2',
+                  'Your Current Lithium Dose is ${litDose}, Current Lithium Level is ${litLvl}, Last Drawn ${lastDrawn} and your Target Lithium Range ${litRange}',
                   icon: Icons.person,
                   backgroundColor: Colors.deepPurple,
                   titleStyleBuilder: (context) => TextStyle(
@@ -107,7 +171,7 @@ class Dashboard extends StatelessWidget {
                 _buildFullWidthCard(
                   title: 'Lab Results',
                   subtitle:
-                  'Your Current TSH Level is 0.89, Last Drawn on 2025-07-16, Current GFR is 0.6 Last Drawn on 2025-07-16',
+                  'Your Current TSH Level is ${tshLvl}, Last Drawn on ${tshLastDrawn}, Current GFR is ${gfrLvl} Last Drawn on ${gfrDate}',
                   icon: Icons.health_and_safety,
                   backgroundColor: Colors.deepPurple,
                   titleStyleBuilder: (context) => TextStyle(
@@ -122,7 +186,7 @@ class Dashboard extends StatelessWidget {
                 ),
                 _buildFullWidthCard(
                   title: 'Diagnosis',
-                  subtitle: 'Treatment Resistant Depression.',
+                  subtitle: '${diagnosis}',
                   icon: Icons.report,
                   backgroundColor: Colors.deepPurple,
                   titleStyleBuilder: (context) => TextStyle(
@@ -137,7 +201,7 @@ class Dashboard extends StatelessWidget {
                 ),
                 _buildFullWidthCard(
                   title: 'Allergies',
-                  subtitle: 'test',
+                  subtitle: '${allergy}',
                   icon: Icons.sick,
                   backgroundColor: Colors.deepPurple,
                   titleStyleBuilder: (context) => TextStyle(
@@ -152,7 +216,7 @@ class Dashboard extends StatelessWidget {
                 ),
                 _buildFullWidthCard(
                   title: 'Potential Drug Interactions',
-                  subtitle: 'ACE-I/ ARB,SSRI’s,Antipsychotics',
+                  subtitle: '${potentialDrugsIndication}',
                   icon: Icons.accessibility,
                   backgroundColor: Colors.deepPurple,
                   titleStyleBuilder: (context) => TextStyle(
@@ -177,7 +241,7 @@ class Dashboard extends StatelessWidget {
                     children: [
                       _buildGridCard(
                         title: 'Next Lab Work Date',
-                        subtitle: '2024-12-25',
+                        subtitle: '${appointsDate.length>0?appointsDate[0]['appointmentDates']:"--"}',
                         icon: Icons.healing,
                         backgroundColor: Colors.indigo,
                         titleColor: Colors.white,
@@ -185,7 +249,7 @@ class Dashboard extends StatelessWidget {
                       ),
                       _buildGridCard(
                         title: 'Next Appointment',
-                        subtitle: '2025-01-10',
+                        subtitle: '${appointsDate.length>1?appointsDate[1]['appointmentDates']:"--"}',
                         icon: Icons.calendar_today,
                         backgroundColor: Colors.indigo,
                         titleColor: Colors.white,
@@ -196,8 +260,8 @@ class Dashboard extends StatelessWidget {
                 ),
 
                 _buildFullWidthCard(
-                  title: 'Dr. Jane Smith',
-                  subtitle: 'Keep monitoring side effects closely.',
+                  title: '${providerNamed}',
+                  subtitle: '${providerComments}',
                   icon: Icons.comment,
                   backgroundColor: Colors.deepPurple,
                   titleStyleBuilder: (context) => TextStyle(

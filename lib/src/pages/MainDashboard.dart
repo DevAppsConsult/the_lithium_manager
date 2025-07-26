@@ -13,9 +13,9 @@ class _DashboardMainState extends State<DashboardMain> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
-    Dashboard(),     // The actual dashboard UI
+    MainDash(),     // The actual dashboard UI
     Tips(),
-    Notifications(),
+    Noftify(),
     MyProfile(),
   ];
 

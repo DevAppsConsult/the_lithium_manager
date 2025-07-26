@@ -10,7 +10,7 @@ String notificationsModelToJson(NotificationsModel data) => json.encode(data.toJ
 
 class NotificationsModel {
     String operation;
-    List<Datum> data;
+    List<dynamic> data;
 
     NotificationsModel({
         required this.operation,
@@ -19,7 +19,7 @@ class NotificationsModel {
 
     factory NotificationsModel.fromJson(Map<String, dynamic> json) => NotificationsModel(
         operation: json["operation"],
-        data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+        data: List<dynamic>.from(json["data"].map((x) => Datum.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
