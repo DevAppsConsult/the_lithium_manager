@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:the_lithium_management/models/NotificationsModel.dart';
 import 'package:the_lithium_management/serviceApis/RemoteCalls.dart';
 import 'package:the_lithium_management/src/pages/dashboard.dart';
@@ -17,16 +20,22 @@ class Noftify extends StatefulWidget {
 }
 
 class Notifications extends State<Noftify>  {
-
+   late SharedPreferences prefs;
    List<dynamic> notifications = [];
 
    @override
-   void initState() {
+    initState() {
      // TODO: implement initState
      super.initState();
-     getUserNotifications("9");
-
+     startProcess();
    }
+
+   Future<void> startProcess() async {
+   prefs = await SharedPreferences.getInstance();
+      var stringified = prefs.getString("userProfile");
+      Map<String, dynamic> user = jsonDecode(stringified!);
+       getUserNotifications(user['PatientID']);
+ } 
 
   Future<void> getUserNotifications(patientID) async {
     var reqData = await RemoteCalls().getNotifications(patientID) as NotificationsModel;

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:the_lithium_management/models/AppointmentsModel.dart';
 import 'package:the_lithium_management/models/PatientProtocol.dart';
 import '../../serviceApis/RemoteCalls.dart';
@@ -17,6 +18,7 @@ class MainDash extends StatefulWidget {
 }
 
 class Dashboard extends State<MainDash> {
+  late SharedPreferences prefs;
   String pName = "--";
   String litDose = "--";
   String litLvl = "--";
@@ -35,28 +37,35 @@ class Dashboard extends State<MainDash> {
   List<dynamic> appointsDate = [];
 
   @override
-  void initState() {
+  initState() {
     // TODO: implement initState
     super.initState();
-    fetchProtocol("9");
-    userAppointments("9");
+    startProcess();
   }
+
+ Future<void> startProcess() async {
+   prefs = await SharedPreferences.getInstance();
+      var stringified = prefs.getString("userProfile");
+      Map<String, dynamic> user = jsonDecode(stringified!);
+      fetchProtocol(user['PatientID']);
+      userAppointments(user['PatientID']);
+ }
 
   Future<void> fetchProtocol(patientID) async {
     var reqData = await RemoteCalls().getProtocols(patientID) as PatientProtocol;
 
 
     setState(() {
-      pName = reqData.data.patientName;
-      litDose = reqData.data.lithiumDose;
-      litLvl = reqData.data.lithiumLevel;
-      lastDrawn = reqData.data.lithiumLevelDate;
-      litRange = reqData.data.targetLithiumRange;
-      tshLvl = reqData.data.tshLevel;
-      tshLastDrawn = reqData.data.tshDate;
-      gfrLvl = reqData.data.gfrLevel;
-      gfrDate = reqData.data.gfrDate;
-      diagnosis = reqData.data.patientDiagnosis;
+      pName = reqData.data.patientName?? '--';
+      litDose = reqData.data.lithiumDose?? '--';
+      litLvl = reqData.data.lithiumLevel?? '--';
+      lastDrawn = reqData.data.lithiumLevelDate?? '--';
+      litRange = reqData.data.targetLithiumRange?? '--';
+      tshLvl = reqData.data.tshLevel?? '--';
+      tshLastDrawn = reqData.data.tshDate?? '--';
+      gfrLvl = reqData.data.gfrLevel?? '--';
+      gfrDate = reqData.data.gfrDate?? '--';
+      diagnosis = reqData.data.patientDiagnosis?? '--';
       allergy = reqData.data.allergies ?? '--';
       potentialDrugsIndication =reqData.data.potentialDrugIndication !=null? jsonDecode(reqData.data.potentialDrugIndication).join(', '):'--';
       providerComments = reqData.data.providerComments??"--";
