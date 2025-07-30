@@ -40,6 +40,9 @@ class _SignInFormState extends State<SignInForm> {
   }
 Future<void> saveData(dynamic data) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
+  if (data == null) {
+    return;
+  }
   Map<String, dynamic> userProfiled = {
       "Name":data.firstName!=null?data.firstName:"" + " " + data.lastName!=null?data.lastName:"",
       "Email":data.email!=null?data.email:"--",

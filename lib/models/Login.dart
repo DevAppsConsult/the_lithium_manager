@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final login = loginFromJson(jsonString);
-
 import 'dart:convert';
 
 Login loginFromJson(String str) => Login.fromJson(json.decode(str));
@@ -9,73 +5,79 @@ Login loginFromJson(String str) => Login.fromJson(json.decode(str));
 String loginToJson(Login data) => json.encode(data.toJson());
 
 class Login {
-    String operation;
-    PatientData patientData;
+  String operation;
+  PatientData? patientData;
+  String? responses;
 
-    Login({
-        required this.operation,
-        required this.patientData,
-    });
+  Login({
+    required this.operation,
+    this.patientData,
+    this.responses,
+  });
 
-    factory Login.fromJson(Map<String, dynamic> json) => Login(
-        operation: json["operation"],
-        patientData: PatientData.fromJson(json["patientData"]),
-    );
+  factory Login.fromJson(Map<String, dynamic> json) => Login(
+        operation: json["operation"] ?? "",
+        patientData: json["patientData"] != null
+            ? PatientData.fromJson(json["patientData"])
+            : null,
+        responses: json["response"],
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "operation": operation,
-        "patientData": patientData.toJson(),
-    };
+        "patientData": patientData?.toJson(),
+        "responses": responses,
+      };
 }
 
 class PatientData {
-    int id;
-    String firstName;
-    String lastName;
-    dynamic phone;
-    String email;
-    String dob;
-    String gender;
-    dynamic ageRange;
-    String age;
-    dynamic avatar;
-    String address;
-    String patientId;
-    dynamic clinicalIndication;
+  int id;
+  String firstName;
+  String lastName;
+  dynamic phone;
+  String email;
+  String dob;
+  String gender;
+  dynamic ageRange;
+  String age;
+  dynamic avatar;
+  String address;
+  String patientId;
+  dynamic clinicalIndication;
 
-    PatientData({
-        required this.id,
-        required this.firstName,
-        required this.lastName,
-        required this.phone,
-        required this.email,
-        required this.dob,
-        required this.gender,
-        required this.ageRange,
-        required this.age,
-        required this.avatar,
-        required this.address,
-        required this.patientId,
-        required this.clinicalIndication,
-    });
+  PatientData({
+    required this.id,
+    required this.firstName,
+    required this.lastName,
+    this.phone,
+    required this.email,
+    required this.dob,
+    required this.gender,
+    this.ageRange,
+    required this.age,
+    this.avatar,
+    required this.address,
+    required this.patientId,
+    this.clinicalIndication,
+  });
 
-    factory PatientData.fromJson(Map<String, dynamic> json) => PatientData(
-        id: json["id"],
-        firstName: json["firstName"],
-        lastName: json["lastName"],
+  factory PatientData.fromJson(Map<String, dynamic> json) => PatientData(
+        id: json["id"] ?? 0,
+        firstName: json["firstName"] ?? "",
+        lastName: json["lastName"] ?? "",
         phone: json["phone"],
-        email: json["email"],
-        dob: json["dob"],
-        gender: json["gender"],
+        email: json["email"] ?? "",
+        dob: json["dob"] ?? "",
+        gender: json["gender"] ?? "",
         ageRange: json["ageRange"],
-        age: json["age"],
+        age: json["age"] ?? "",
         avatar: json["avatar"],
-        address: json["address"],
-        patientId: json["patientID"],
+        address: json["address"] ?? "",
+        patientId: json["patientID"] ?? "",
         clinicalIndication: json["clinicalIndication"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "id": id,
         "firstName": firstName,
         "lastName": lastName,
@@ -89,5 +91,5 @@ class PatientData {
         "address": address,
         "patientID": patientId,
         "clinicalIndication": clinicalIndication,
-    };
+      };
 }

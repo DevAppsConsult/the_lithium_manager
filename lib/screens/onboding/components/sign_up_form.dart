@@ -1,7 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:rive/rive.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:the_lithium_management/Intro.dart';
+import 'package:the_lithium_management/models/Login.dart';
+import 'package:the_lithium_management/serviceApis/RemoteCalls.dart';
 
 class SignUpForm extends StatefulWidget {
   const SignUpForm({super.key});
@@ -14,7 +19,12 @@ class _SignUpFormState extends State<SignUpForm> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool isShowLoading = false;
   bool isShowConfetti = false;
-
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController fNameController = TextEditingController();
+  TextEditingController lNameController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  String checkUser = "";
   late SMITrigger check;
   late SMITrigger error;
   late SMITrigger reset;
@@ -27,13 +37,36 @@ class _SignUpFormState extends State<SignUpForm> {
     return controller;
   }
 
-  void SignUp(BuildContext context) {
+Future<void> saveData(dynamic data) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  if (data == null) {
+    return;
+  }
+  Map<String, dynamic> userProfiled = {
+      "Name":data.firstName!=null?data.firstName:"" + " " + data.lastName!=null?data.lastName:"",
+      "Email":data.email!=null?data.email:"--",
+      "Phone":data.phone!=null?data.phone:"--",
+      "Address":data.address!=null?data.address:"--",
+      "PatientID":data.patientId !=null?data.patientId:"--"
+     };
+    await prefs.setString("userProfile", jsonEncode(userProfiled));
+  // check login and grant access
+ 
+}
+Future<void> SignUp(BuildContext context) async {
+    var data = await RemoteCalls().signUp(emailController.text,passwordController.text,phoneController.text,fNameController.text,lNameController.text ) as Login;
     setState(() {
       isShowLoading = true;
       isShowConfetti = true;
+      checkUser = data.operation; 
+      saveData(data.patientData);
     });
     Future.delayed(const Duration(seconds: 1), () {
       if (_formKey.currentState!.validate()) {
+         Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => IntroPage()),
+        );
         check.fire();
         Future.delayed(const Duration(seconds: 2), () {
           setState(() {
@@ -70,17 +103,133 @@ class _SignUpFormState extends State<SignUpForm> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      buildInputField(
-                          "First Name", CupertinoIcons.person_add, false),
-                      buildInputField(
-                          "Last Name", CupertinoIcons.person_add_solid, false),
-                      buildInputField(
-                          "Email Address", CupertinoIcons.envelope_fill, false),
-                      buildInputField(
-                          "Phone Number", CupertinoIcons.phone, false),
-                      buildInputField(
-                          "Password", CupertinoIcons.lock, true),
-                      const SizedBox(height: 20),
+                      const Text(
+                  "First Name",
+                  style: TextStyle(color: Colors.black54),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0, bottom: 16),
+                  child: TextFormField(
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "";
+                      }
+                      return null;
+                    },
+                    onSaved: (email) {},
+                    controller: fNameController,
+                    decoration: const InputDecoration(
+                        prefixIcon: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Icon(
+                        CupertinoIcons.person,
+                        color: Colors.black,
+                      ),
+                    )),
+                  ),
+                ),
+                      const Text(
+                  "Last Name",
+                  style: TextStyle(color: Colors.black54),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0, bottom: 16),
+                  child: TextFormField(
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "";
+                      }
+                      return null;
+                    },
+                    onSaved: (email) {},
+                    controller: lNameController,
+                    decoration: const InputDecoration(
+                        prefixIcon: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Icon(
+                        CupertinoIcons.person,
+                        color: Colors.black,
+                      ),
+                    )),
+                  ),
+                ),
+                      const Text(
+                  "Email",
+                  style: TextStyle(color: Colors.black54),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0, bottom: 16),
+                  child: TextFormField(
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "";
+                      }
+                      return null;
+                    },
+                    onSaved: (email) {},
+                    controller: emailController,
+                    decoration: const InputDecoration(
+                        prefixIcon: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Icon(
+                        CupertinoIcons.envelope_fill,
+                        color: Colors.black,
+                      ),
+                    )),
+                  ),
+                ),
+                      const Text(
+                  "Phone Number",
+                  style: TextStyle(color: Colors.black54),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0, bottom: 16),
+                  child: TextFormField(
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "";
+                      }
+                      return null;
+                    },
+                    onSaved: (email) {},
+                    controller: phoneController,
+                    decoration: const InputDecoration(
+                        prefixIcon: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Icon(
+                        CupertinoIcons.phone,
+                        color: Colors.black,
+                      ),
+                    )),
+                  ),
+                ),
+                      const Text(
+                  "Password",
+                  style: TextStyle(color: Colors.black54),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0, bottom: 10),
+                  child: TextFormField(
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "";
+                      }
+                      return null;
+                    },
+                    onSaved: (password) {},
+                    controller: passwordController,
+                    obscureText: true,
+                    decoration: const InputDecoration(
+                        prefixIcon: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Icon(
+                        CupertinoIcons.lock,
+                        color: Colors.black,
+                      ),
+                    )),
+                  ),
+                ),
+                     
                       ElevatedButton.icon(
                         onPressed: () {
                           SignUp(context);

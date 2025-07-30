@@ -21,7 +21,7 @@ class Noftify extends StatefulWidget {
 
 class Notifications extends State<Noftify>  {
    late SharedPreferences prefs;
-   List<dynamic> notifications = [];
+   List<dynamic>? notifications = [];
 
    @override
     initState() {
@@ -39,9 +39,12 @@ class Notifications extends State<Noftify>  {
 
   Future<void> getUserNotifications(patientID) async {
     var reqData = await RemoteCalls().getNotifications(patientID) as NotificationsModel;
+    if (reqData.data == null) {
+      return;
+    }
     setState(() {
       notifications  = reqData.data;
-      print(notifications[0].notificationDate);
+      print(notifications!.isNotEmpty?notifications![0].notificationDate:"");
     });
   }
 
@@ -144,18 +147,18 @@ class Notifications extends State<Noftify>  {
                         child: Icon(Icons.notifications, color: Colors.white),
                       ),
                       title: Text(
-                       '${ notifications[index].notificationDate}',
+                       '${ notifications?[index].notificationDate}',
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       subtitle: Text(
-                        '${notifications[index].notificationDetails}',
+                        '${notifications?[index].notificationDetails}',
                       ),
                       trailing: const Icon(Icons.chevron_right),
                     ),
                   ),
                 );
               },
-              childCount: notifications.length,
+              childCount: notifications?.length,
             ),
           ),
         ],

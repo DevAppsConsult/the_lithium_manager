@@ -9,8 +9,9 @@ import '../models/NotificationsModel.dart';
 import 'package:http/http.dart' as http;
 
 class RemoteCalls{
+  final String IP_PORT = "44.223.87.21:4356"; // 44.223.87.21:4356
   Future<Login?> getLogin(String email,String password) async{
-    var api = Uri.parse("http://44.223.87.21:4356/api/Login?Email=${email}&Password=${password}");
+    var api = Uri.parse("http://${IP_PORT}/api/Login?Email=${email}&Password=${password}");
     var response  = await http.get(api);
     if(response.statusCode == 200){
        var json = response.body;
@@ -20,7 +21,7 @@ class RemoteCalls{
 
   Future<NotificationsModel?> getNotifications(String pId) async{
     //http://localhost:5000/api/Notifications?Email=nivanpee%40gmail.com
-    var api = Uri.parse("http://44.223.87.21:4356/api/Notifications?pID=${pId}");
+    var api = Uri.parse("http://${IP_PORT}/api/Notifications?pID=${pId}");
     var response  = await http.get(api);
     if(response.statusCode == 200){
        var json = response.body;
@@ -29,7 +30,7 @@ class RemoteCalls{
   }
 
   Future<PatientProtocol?> getProtocols(String pID) async{
-    var api = Uri.parse("http://44.223.87.21:4356/api/PatientProtocol?PatientID=${pID}");
+    var api = Uri.parse("http://${IP_PORT}/api/PatientProtocol?PatientID=${pID}");
     var response  = await http.get(api);
     if(response.statusCode == 200){
        var json = response.body;
@@ -38,7 +39,7 @@ class RemoteCalls{
   }
 
   Future<Appointments?> getPatientAppointments(String pID) async{
-    var api = Uri.parse("http://44.223.87.21:4356/api/Appointments?pID=${pID}");
+    var api = Uri.parse("http://${IP_PORT}/api/Appointments?pID=${pID}");
     var response  = await http.get(api);
     if(response.statusCode == 200){
       var json = response.body;
@@ -47,13 +48,22 @@ class RemoteCalls{
   }
 
   Future<EditPatient?> editPatient(String fieldName,String val,String pId) async{
-    var api = Uri.parse("http://44.223.87.21:4356/api/EditProfile?field=${fieldName}&vals=${val}&pId=${pId}");
+    var api = Uri.parse("http://${IP_PORT}/api/EditProfile?field=${fieldName}&vals=${val}&pId=${pId}");
     var response  = await http.get(api);
     if(response.statusCode == 200){
        var json = response.body;
        return editedData(json);
     }
     
+  }
+
+  Future<Login?> signUp (String Email,String Password,String Phone,String FirstName,String LastName)async {
+     var api = Uri.parse("http://${IP_PORT}/api/Register?Email=${Email}&Password=${Password}&Phone=${Phone}&FirstName=${FirstName}&LastName=${LastName}");
+      var response  = await http.get(api);
+      if(response.statusCode == 200){
+        var json = response.body;
+        return loginFromJson(json);
+      }
   }
 
 }

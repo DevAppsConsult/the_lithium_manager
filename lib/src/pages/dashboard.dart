@@ -34,7 +34,7 @@ class Dashboard extends State<MainDash> {
   String potentialDrugsIndication = "--";
   String providerComments = '--';
   String providerNamed = "--";
-  List<dynamic> appointsDate = [];
+  List<dynamic>? appointsDate = [];
 
   @override
   initState() {
@@ -56,26 +56,26 @@ class Dashboard extends State<MainDash> {
 
 
     setState(() {
-      pName = reqData.data.patientName?? '--';
-      litDose = reqData.data.lithiumDose?? '--';
-      litLvl = reqData.data.lithiumLevel?? '--';
-      lastDrawn = reqData.data.lithiumLevelDate?? '--';
-      litRange = reqData.data.targetLithiumRange?? '--';
-      tshLvl = reqData.data.tshLevel?? '--';
-      tshLastDrawn = reqData.data.tshDate?? '--';
-      gfrLvl = reqData.data.gfrLevel?? '--';
-      gfrDate = reqData.data.gfrDate?? '--';
-      diagnosis = reqData.data.patientDiagnosis?? '--';
-      allergy = reqData.data.allergies ?? '--';
-      potentialDrugsIndication =reqData.data.potentialDrugIndication !=null? jsonDecode(reqData.data.potentialDrugIndication).join(', '):'--';
-      providerComments = reqData.data.providerComments??"--";
-      providerNamed = reqData.data.providerName??"--";
+      pName = reqData.data?.patientName?? '--';
+      litDose = reqData.data?.lithiumDose?? '--';
+      litLvl = reqData.data?.lithiumLevel?? '--';
+      lastDrawn = reqData.data?.lithiumLevelDate?? '--';
+      litRange = reqData.data?.targetLithiumRange?? '--';
+      tshLvl = reqData.data?.tshLevel?? '--';
+      tshLastDrawn = reqData.data?.tshDate?? '--';
+      gfrLvl = reqData.data?.gfrLevel?? '--';
+      gfrDate = reqData.data?.gfrDate?? '--';
+      diagnosis = reqData.data?.patientDiagnosis?? '--';
+      allergy = reqData.data?.allergies ?? '--';
+      potentialDrugsIndication =reqData.data?.potentialDrugIndication !=null? jsonDecode(reqData.data?.potentialDrugIndication).join(', '):'--';
+      providerComments = reqData.data?.providerComments??"--";
+      providerNamed = reqData.data?.providerName??"--";
     });
   }
 Future<void> userAppointments(patientID) async{
   var appointmentData = await RemoteCalls().getPatientAppointments(patientID) as Appointments;
   setState(() {
-    appointsDate = appointmentData.data; 
+    appointsDate =(appointmentData!=null?appointmentData.data:"--") as List?; 
   });
 }
   @override
@@ -250,7 +250,7 @@ Future<void> userAppointments(patientID) async{
                     children: [
                       _buildGridCard(
                         title: 'Next Lab Work Date',
-                        subtitle: '${appointsDate.length>0?appointsDate[0]['appointmentDates']:"--"}',
+                        subtitle: '${appointsDate!.isNotEmpty ? appointsDate![0].appointmentDates.toString() : "--"}',
                         icon: Icons.healing,
                         backgroundColor: Colors.indigo,
                         titleColor: Colors.white,
@@ -258,7 +258,7 @@ Future<void> userAppointments(patientID) async{
                       ),
                       _buildGridCard(
                         title: 'Next Appointment',
-                        subtitle: '${appointsDate.length>1?appointsDate[1]['appointmentDates']:"--"}',
+                        subtitle: '${appointsDate!.length>1 ? appointsDate![1].appointmentDates.toString() : "--"}',
                         icon: Icons.calendar_today,
                         backgroundColor: Colors.indigo,
                         titleColor: Colors.white,
