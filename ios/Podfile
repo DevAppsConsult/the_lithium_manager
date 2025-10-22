@@ -1,11 +1,15 @@
-# Uncomment the next line to define a global platform for your project
 platform :ios, '13.0'
 
 use_frameworks!
 use_modular_headers!
 
-# This ensures Flutter's CocoaPods integration works correctly on Codemagic
+# Detect Flutter SDK path automatically
 flutter_root = ENV['FLUTTER_ROOT']
+if flutter_root.nil? || flutter_root.empty?
+  flutter_root = File.expand_path('~/.flutter-sdk') if File.exist?(File.expand_path('~/.flutter-sdk'))
+  flutter_root = '/usr/local/flutter' if File.exist?('/usr/local/flutter')
+end
+
 require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root)
 
 target 'Runner' do
