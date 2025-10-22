@@ -3,7 +3,17 @@ platform :ios, '13.0'
 use_frameworks!
 use_modular_headers!
 
+# This block ensures Codemagic can locate Flutter's iOS integration
+require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root = File.expand_path('..', File.dirname(__FILE__)))
+
 target 'Runner' do
-  flutter_application_path = '../'
-  eval(File.read(File.join(flutter_application_path, '.ios', 'Flutter', 'podhelper.rb')), binding)
+  flutter_application_path = File.join('..')
+  install_all_flutter_pods(flutter_application_path)
 end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    flutter_additional_ios_build_settings(target)
+  end
+end
+
